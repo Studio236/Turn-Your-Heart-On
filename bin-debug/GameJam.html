@@ -21,7 +21,7 @@
         <style type="text/css" media="screen"> 
 			html, body	{ height:100%; }
 			body { margin:0; padding:0; overflow:auto; text-align:center; 
-			       background-color: #000000; }   
+			       background-color: #ffffff; }   
 			#flashContent { display:none; }
         </style>
 		
@@ -40,7 +40,7 @@
             var flashvars = {};
             var params = {};
             params.quality = "high";
-            params.bgcolor = "#000000";
+            params.bgcolor = "#ffffff";
             params.allowscriptaccess = "sameDomain";
             params.allowfullscreen = "true";
             var attributes = {};
@@ -49,7 +49,7 @@
             attributes.align = "middle";
             swfobject.embedSWF(
                 "GameJam.swf", "flashContent", 
-                "640", "480", 
+                "960", "650", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
 			<!-- JavaScript enabled so display the flashContent div in case it is not replaced with a swf object. -->
@@ -74,16 +74,16 @@
         </div>
 	   	
        	<noscript>
-            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="640" height="480" id="GameJam">
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="960" height="650" id="GameJam">
                 <param name="movie" value="GameJam.swf" />
                 <param name="quality" value="high" />
-                <param name="bgcolor" value="#000000" />
+                <param name="bgcolor" value="#ffffff" />
                 <param name="allowScriptAccess" value="sameDomain" />
                 <param name="allowFullScreen" value="true" />
                 <!--[if !IE]>-->
-                <object type="application/x-shockwave-flash" data="GameJam.swf" width="640" height="480">
+                <object type="application/x-shockwave-flash" data="GameJam.swf" width="960" height="650">
                     <param name="quality" value="high" />
-                    <param name="bgcolor" value="#000000" />
+                    <param name="bgcolor" value="#ffffff" />
                     <param name="allowScriptAccess" value="sameDomain" />
                     <param name="allowFullScreen" value="true" />
                 <!--<![endif]-->
