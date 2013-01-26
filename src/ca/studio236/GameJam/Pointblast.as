@@ -6,9 +6,10 @@ package ca.studio236.GameJam
 	{
 		private var i;
 		
-		public function Pointblast(e:Enemy)
+		public function Pointblast(e:Enemy,s:Scoreboard)
 		{
-			i = e.pointValue; 
+			i = e.pointValue;
+			s._score += e.pointValue;
 			super(e.x, e.y, 100, e.pointValue.toString());
 		}
 		
@@ -16,7 +17,7 @@ package ca.studio236.GameJam
 			
 			this.y++;
 			this.angle++;
-			this.alpha -= 1.0/i;
+			this.alpha -= 1.0/(i/20);
 			
 			if(this._alpha < 0)
 				this.destroy();

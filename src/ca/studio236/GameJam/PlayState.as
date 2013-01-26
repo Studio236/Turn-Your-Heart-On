@@ -30,6 +30,10 @@ package ca.studio236.GameJam
 		
 		private var emitter:FlxEmitter = new FlxEmitter(100,100);
 		
+		private var powerups:FlxGroup = new FlxGroup();
+		
+		public var score:Scoreboard = new Scoreboard(5,FlxG.height - 20,100);
+		
 		
 		override public function create():void
 		{
@@ -38,14 +42,18 @@ package ca.studio236.GameJam
 			FlxG.mouse.show(targetPNG);
 			prepTileMap();
 			add(footsteps);
+			sparay.maxSize = 200;
 			entities.add(sparay);
+			PowerUpRandomizer();
 			entities.add(character);
-			for(var i = 0; i < 10; i ++) {
-				enemies.add(new Plaque(character,Math.random()*600,Math.random()*600));
+			for(var i = 0; i < 1; i ++) {
+				enemies.add(new PlaqueDaddy(character,200,200));
 			}
 			entities.add(enemies);
 			add(entities);
 			add(emitter);
+			add(score);
+			
 		}
 		
 		public function prepTileMap() {
@@ -82,8 +90,7 @@ package ca.studio236.GameJam
 			}
 			if(FlxG.mouse.pressed()) {
 				
-				sparay.add(new Spray(character.x,character.y,character.angle));
-				
+				sparay.add(new Spray(sparay,character.x,character.y,character.angle));
 			}
 			
 			//sfootsteps.add(new Footstep(character.x, character.y));
@@ -95,6 +102,7 @@ package ca.studio236.GameJam
 			super.update();
 			FlxG.collide(enemies,sparay,overlapHandle);
 			FlxG.collide(entities,tilemap);
+			FlxG.overlap(character,powerups, characterPowerUpHandler); 
 			
 			
 			
@@ -107,25 +115,65 @@ package ca.studio236.GameJam
 		
 		public function overlapHandle(o,b) {
 			trace('test');
+			
 			b.kill();
 			b.destroy();
-			sparay.remove(b);
+			sparay.remove(b,true);
+			
 			
 			o.hurt(1);
 			if(o.health <= 1) {
-				enemies.remove(o);
+				enemies.remove(o,true);
 				emitter.x = o.x;
 				emitter.y = o.y;
-				add(new Pointblast(o));
+				add(new Pointblast(o,score));
 				o.kill();
 				o.destroy();
-				FlxG.shake(0.01,0.1);
-				enemies.add(new Plaque(character,-10,Math.random()*FlxG.height));
+				FlxG.shake(0.01,0.1); 
+				enemies.add(new PlaqueDaddy(character,-10,Math.random()*FlxG.height));
 				emitter.makeParticles(particle,10);
 				
 				emitter.start()
 			}
 			
+		}
+		
+		public function PowerUpRandomizer()
+		{
+			var PowerUpRandomizer9000:Number = Math.floor(Math.random()*6);
+			var PowerUpRandomizerString:String;
+			
+			switch(PowerUpRandomizer9000)
+			{
+				case 0:
+					PowerUpRandomizerString = "Health";
+					break;
+				case 1:
+					PowerUpRandomizerString = "Caffeine";
+					break;
+				case 2:
+					PowerUpRandomizerString = "Double";
+					break;
+				case 3:
+					PowerUpRandomizerString = "Triple";
+					break;
+				case 4:
+					PowerUpRandomizerString = "Quad";
+					break;
+				case 5:
+					PowerUpRandomizerString = "Defib";
+					break;
+			}
+			
+			powerups.add(new Powerup(PowerUpRandomizerString,Math.random()*100,Math.random()*100));
+			
+			entities.add(powerups);
+		}
+		
+		public function characterPowerUpHandler(c,p){
+			p.kill();
+			p.destroy();
+			powerups.remove(p, true);
 		}
 	}
 }

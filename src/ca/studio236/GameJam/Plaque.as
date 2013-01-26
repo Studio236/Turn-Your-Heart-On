@@ -15,7 +15,7 @@ package ca.studio236.GameJam
 			this.health = 5;
 			this.pointValue = 1500;
 			_character = character;
-			this.solid = false;
+			
 		}
 		
 		override public function update():void {
@@ -29,10 +29,10 @@ package ca.studio236.GameJam
 			
 			this.angle = -degrees + 180;
 			
-			time+= FlxG.elapsed;
+			time++;
 			
-			this.acceleration.x = Math.sin(time/2)*30;
-			this.acceleration.y = Math.cos(time/2)*30;
+			this.x += Math.sin(time/20);
+			this.y += Math.cos(time/20);
 			
 			super.update();
 			
