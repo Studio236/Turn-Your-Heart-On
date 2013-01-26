@@ -1,16 +1,32 @@
 package ca.studio236.GameJam
 {
-	import org.flixel.FlxSprite;
+	import org.flixel.*;
 	
 	public class Enemy extends FlxSprite
 	{
 		public var pointValue:int;
+		public var _character:HeartBoy;
+		public var _path:FlxPath;
+		public var _speed:int;
 		
-		public function Enemy(X:Number=0, Y:Number=0, SimpleGraphic:Class=null, pointValue:int=100)
+		public function Enemy(character:HeartBoy, speed:int, X:Number=0, Y:Number=0, SimpleGraphic:Class=null, pValue:int=100)
 		{
+			_speed = speed;
+			pointValue = pValue;
+			_character = character;
 			super(X, Y, SimpleGraphic);
 		}
-	
+		
+		override public function update():void
+		{
+			var cx = this.x - _character.x;
+			var cy = this.y - _character.y;
+			
+			var radians = Math.atan2(cx,cy);
+			
+			this.velocity.x = -Math.sin(radians)*_speed;
+			this.velocity.y = -Math.cos(radians)*_speed;
+		}
 		
 	}
 }

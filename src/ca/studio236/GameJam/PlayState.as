@@ -15,18 +15,25 @@ package ca.studio236.GameJam
 		
 		private var tilemap:FlxTilemap;
 		
-		private var character:HeartBoy = new HeartBoy();
+		public var character:HeartBoy = new HeartBoy();
 		
-		private var entities:FlxGroup;
+		private var entities:FlxGroup = new FlxGroup();
+		
+		private var sparay:FlxGroup = new FlxGroup();
+		
+		private var footsteps:FlxGroup = new FlxGroup();
 		
 		override public function create():void
 		{
+			
 			//loads the crosshair
 			FlxG.mouse.show(targetPNG);
 			prepTileMap();
-			add(character);
-			
-			
+			add(footsteps);
+			entities.add(sparay);
+			entities.add(new Plaque(character,100,100));
+			entities.add(character);
+			add(entities);
 		}
 		
 		public function prepTileMap() {
@@ -34,7 +41,7 @@ package ca.studio236.GameJam
 			trace(new mapString);
 			tilemap = new FlxTilemap();
 			tilemap.loadMap(new mapString, tilegraphic,32 ,32);
-
+			
 			this.add(tilemap);
 			generateNewMap();
 			
@@ -62,6 +69,16 @@ package ca.studio236.GameJam
 				generateNewMap();
 			
 			}
+			if(FlxG.mouse.pressed()) {
+				
+				sparay.add(new Spray(character.x,character.y,character.angle));
+				
+			}
+			
+			footsteps.add(new Footstep(character.x, character.y));
+			
+			//loop and check
+			
 			super.update();
 			
 			FlxG.collide(entities,tilemap);
