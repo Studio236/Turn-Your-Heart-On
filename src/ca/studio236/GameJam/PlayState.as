@@ -7,7 +7,7 @@ package ca.studio236.GameJam
 		[Embed(source = "../../../../assets/blankTileCsv", mimeType = "application/octet-stream")]
 		public var mapString:Class;
 		
-		[Embed(source="../../../../assets/tilemap.png")]
+		[Embed(source="../../../../assets/4SideTiles.png")]
 		private var tilegraphic:Class;
 		
 		[Embed(source="../../../../assets/particle.png")]
@@ -33,27 +33,31 @@ package ca.studio236.GameJam
 		
 		private var emitter:FlxEmitter = new FlxEmitter(100,100);
 		
-		private var powerups:FlxGroup = new FlxGroup();
 		
 		public var spawner:Spawner;
 		
 		public var score:Scoreboard = new Scoreboard(5,FlxG.height - 20,100);
 		
 		public var health:FlxText;
-		
-		private var PowerUpRandomizerString:String;
+		private var powerup:Powerup;
+		private var _PowerUpRandomizer:int;
+		public var Bypass:int;
+		public var BypassTimer:Number;
 		
 		override public function create():void
 		{
 			add(new FlxSprite(0,0,bg));
-			
+			_PowerUpRandomizer = Math.floor(Math.random()*6);
+			powerup = new Powerup(_PowerUpRandomizer,Math.random()*FlxG.width,Math.random()*FlxG.height);
+			entities.add(powerup);
+			Bypass = 1;
+			BypassTimer = -1;
 			//loads the crosshair
 			FlxG.mouse.show(targetPNG);
 			prepTileMap();
 			add(footsteps);
 			sparay.maxSize = 200;
 			entities.add(sparay);
-			PowerUpRandomizer();
 			entities.add(character);
 			for(var i = 0; i < 1; i ++) {
 				enemies.add(new HeartWorm(character,200,200));
@@ -68,7 +72,7 @@ package ca.studio236.GameJam
 			add(health);
 			
 			
-			spawner = new Spawner(character,enemies,score);
+			spawner = new Spawner(character,enemies,score,this);
 		}
 		
 		public function prepTileMap() {
@@ -92,7 +96,7 @@ package ca.studio236.GameJam
 							i*32 <= character.x && (i+1)*32 >= character.x && j*32 <= character.y+16 && (j+1)*32 >= character.y+16 ||
 							i*32 <= character.x+16 && (i+1)*32 >= character.x+16 && j*32 <= character.y+16 && (j+1)*32 >= character.y+16){	
 						}else{
-							tilemap.setTile(i,j,1);
+							tilemap.setTile(i,j,Math.ceil(Math.random()*3));
 						}
 						
 						
@@ -106,10 +110,31 @@ package ca.studio236.GameJam
 				generateNewMap();
 			
 			}
-			if(FlxG.mouse.pressed()) {
-				
-				sparay.add(new Spray(sparay,character.x,character.y,character.angle));
+			if(BypassTimer < 0){
+				Bypass = 1;
+			}else{
+				BypassTimer--;
 			}
+			
+			if(FlxG.mouse.pressed() && character.alive) {
+				
+				if(Bypass==2){
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle-180));
+				}else if(Bypass==3){
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle-120));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle+120));
+				}else if(Bypass==4){
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle-90));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle-180));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle-270));
+				}else{
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle));
+				}
+			}
+			PowerUpRandomizer();
 
 			
 			
@@ -122,7 +147,7 @@ package ca.studio236.GameJam
 			FlxG.collide(enemies,sparay,overlapHandle);
 			FlxG.collide(entities,tilemap);
 			FlxG.collide(enemies,character,playerHit);
-			FlxG.overlap(character,powerups, characterPowerUpHandler); 
+			FlxG.overlap(character,powerup, characterPowerUpHandler); 
 			spawner.tickSpawner();
 			
 			
@@ -161,41 +186,28 @@ package ca.studio236.GameJam
 		
 		public function PowerUpRandomizer()
 		{
-			var PowerUpRandomizer9000:Number = Math.floor(Math.random()*6);
+			var slot:Number = Math.random();
 			
-			
-			switch(PowerUpRandomizer9000)
-			{
-				case 0:
-					PowerUpRandomizerString = "Health";
-					break;
-				case 1:
-					PowerUpRandomizerString = "Caffeine";
-					break;
-				case 2:
-					PowerUpRandomizerString = "Double";
-					break;
-				case 3:
-					PowerUpRandomizerString = "Triple";
-					break;
-				case 4:
-					PowerUpRandomizerString = "Quad";
-					break;
-				case 5:
-					PowerUpRandomizerString = "Defib";
-					break;
+			if(slot < 0.001 && !powerup.alive){
+				_PowerUpRandomizer = Math.floor(Math.random()*6);
+				
+				powerup = new Powerup(_PowerUpRandomizer,Math.random()*FlxG.width,Math.random()*FlxG.height);
+				
+				entities.add(powerup);
 			}
-			
-			powerups.add(new Powerup(PowerUpRandomizerString,Math.random()*100,Math.random()*100));
-			
-			entities.add(powerups);
 		}
 		
 		public function characterPowerUpHandler(c,p){
-			p.react(this.PowerUpRandomizerString, this.character,this.health,this.enemies);
+			Bypass = p.react(this._PowerUpRandomizer, this.character,this.health,this.enemies, this.Bypass);
+			if(Bypass==2){
+				BypassTimer=1000;
+			}else if(Bypass==3){
+				BypassTimer=500;
+			}else if(Bypass==4){
+				BypassTimer=250;
+			}
 			p.kill();
 			p.destroy();
-			powerups.remove(p, true);
 		}
 		
 		public function setHealth(i:int){

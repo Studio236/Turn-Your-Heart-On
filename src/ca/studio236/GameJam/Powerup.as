@@ -1,8 +1,8 @@
 package ca.studio236.GameJam
 {
+	import org.flixel.FlxGroup;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxText;
-	import org.flixel.FlxGroup;
 	
 	public class Powerup extends FlxSprite
 	{
@@ -24,54 +24,67 @@ package ca.studio236.GameJam
 		[Embed(source="../../../../assets/PowerUps/PU_Health.png")]
 		public var Health:Class;
 		
-		public var _powerType:String;
+		public var _powerType:int;
+		public var _age:int;
 		
-		public function Powerup(powerType:String, X:Number=0, Y:Number=0, SimpleGraphic:Class=null)
+		public function Powerup(powerType:int, X:Number=0, Y:Number=0, SimpleGraphic:Class=null)
 		{
 			super(X, Y, SimpleGraphic);
 			_powerType = powerType;
-		}
-		
-		override public function update():void
-		{
-			if(_powerType=="Health"){
+			_age = 10000;
+			
+			if(_powerType==0){
 				this.loadGraphic(Health,true,false,16,16);
 				//health up
-			}else if(_powerType=="Caffeine"){
+			}else if(_powerType==1){
 				this.loadGraphic(Caff,true,false,16,16);
 				//invincible for 10 seconds
-			}else if(_powerType=="Double"){
+			}else if(_powerType==2){
 				this.loadGraphic(Dub,true,false,16,16);
 				//two direction shooting
-			}else if(_powerType=="Triple"){
+			}else if(_powerType==3){
 				this.loadGraphic(Trip,true,false,16,16);
 				//three direction shooting
-			}else if(_powerType=="Quad"){
+			}else if(_powerType==4){
 				this.loadGraphic(Quad,true,false,16,16);
 				//four firection shooting
-			}else if(_powerType=="Defib"){
+			}else if(_powerType==5){
 				this.loadGraphic(Defib,true,false,16,16);
 				//deal 10 damange to every enemy
 			}
 		}
 		
-		public function react(s:String, c:HeartBoy, h:FlxText, e:FlxGroup):void{
-			if(s=="Health"){
+		override public function update():void
+		{
+			
+		}
+		
+		public function react(s:int, c:HeartBoy, h:FlxText, e:FlxGroup, b:int):int{
+			if(s==0){
 				//health up
 				c.health = 3;
 				h.text = "<3 <3 <3";
-			}else if(s=="Caffeine"){
+			}else if(s==1){
 				//invincible for 10 seconds
 				c.flicker(10);
-			}else if(s=="Double"){
+			}else if(s==2){
 				//two direction shooting
-			}else if(s=="Triple"){
+				return 2;
+			}else if(s==3){
 				//three direction shooting
-			}else if(s=="Quad"){
+				return 3;
+			}else if(s==4){
 				//four firection shooting
-			}else if(s=="Defib"){
-				//deal 10 damange to every enemy
+				return 4;
+			}else if(s==5){
+				//deal 50 damange to every enemy
+				for(var i = 0; i < e.length; i++){
+					e.members[i].kill();
+					e.members[i].destroy();
+					e.clear();
+				}
 			}
+			return 1;
 		}
 	}
 }
