@@ -1,6 +1,6 @@
 package ca.studio236.GameJam
 {
-	import org.flixel.FlxPoint;
+	import org.flixel.*;
 
 	public class PlaqueDaddy extends Enemy
 	{
@@ -10,6 +10,8 @@ package ca.studio236.GameJam
 		private var target:FlxPoint;
 		
 		private var time = 0;
+		
+		private var blobs:FlxGroup = new FlxGroup();
 		
 		public function PlaqueDaddy(character:HeartBoy, speed:int, X:Number=0, Y:Number=0, SimpleGraphic:Class=null)
 		{
@@ -21,6 +23,7 @@ package ca.studio236.GameJam
 			this.addAnimation("main",[0,1],3);
 			this.play("main");
 			this.immovable = true;
+			FlxG.state.add(blobs);
 		}
 		
 		override public function update():void {
@@ -31,9 +34,20 @@ package ca.studio236.GameJam
 			this.x = Math.cos(time/100)*150 + target.x;
 			this.y = Math.sin(time/100)*150 + target.y;
 			
+			
+			
 			if(time % 100 == 0) {
+				var cx = _character.x - (this.x + 8);
+				var cy = _character.y - (this.y + 8);
 				
+				
+				blobs.add(new Blob(this.x,this.y, Math.atan2(cx,cy)));
 			}
+		}
+		
+		override public function kill():void {
+			FlxG.timeScale = 0.5;
+			super.kill();
 		}
 	}
 }
