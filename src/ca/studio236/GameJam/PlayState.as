@@ -10,6 +10,9 @@ package ca.studio236.GameJam
 		[Embed(source="../../../../assets/tilemap.png")]
 		private var tilegraphic:Class;
 		
+		[Embed(source="../../../../assets/particle.png")]
+		private var particle:Class;
+		
 		[Embed(source = '../../../../assets/TargetCursor.png')] 
 		public var targetPNG:Class;
 		
@@ -19,9 +22,14 @@ package ca.studio236.GameJam
 		
 		private var entities:FlxGroup = new FlxGroup();
 		
+		private var enemies:FlxGroup = new FlxGroup();
+		
 		private var sparay:FlxGroup = new FlxGroup();
 		
 		private var footsteps:FlxGroup = new FlxGroup();
+		
+		private var emitter:FlxEmitter = new FlxEmitter(100,100);
+		
 		
 		override public function create():void
 		{
@@ -31,14 +39,17 @@ package ca.studio236.GameJam
 			prepTileMap();
 			add(footsteps);
 			entities.add(sparay);
-			entities.add(new Plaque(character,100,100));
 			entities.add(character);
+			for(var i = 0; i < 10; i ++) {
+				enemies.add(new Plaque(character,Math.random()*600,Math.random()*600));
+			}
+			entities.add(enemies);
 			add(entities);
+			add(emitter);
 		}
 		
 		public function prepTileMap() {
-		
-			trace(new mapString);
+
 			tilemap = new FlxTilemap();
 			tilemap.loadMap(new mapString, tilegraphic,32 ,32);
 			
@@ -75,13 +86,45 @@ package ca.studio236.GameJam
 				
 			}
 			
-			footsteps.add(new Footstep(character.x, character.y));
+			//sfootsteps.add(new Footstep(character.x, character.y));
 			
-			//loop and check
+			
+			
+			
 			
 			super.update();
-			
+			FlxG.collide(enemies,sparay,overlapHandle);
 			FlxG.collide(entities,tilemap);
+			
+			
+			
+			
+		}
+		
+		public function goToMenu(){
+			FlxG.switchState(new MenuState);
+		}
+		
+		public function overlapHandle(o,b) {
+			trace('test');
+			b.kill();
+			b.destroy();
+			sparay.remove(b);
+			
+			o.hurt(1);
+			if(o.health <= 1) {
+				enemies.remove(o);
+				emitter.x = o.x;
+				emitter.y = o.y;
+				add(new Pointblast(o));
+				o.kill();
+				o.destroy();
+				FlxG.shake(0.01,0.1);
+				enemies.add(new Plaque(character,-10,Math.random()*FlxG.height));
+				emitter.makeParticles(particle,10);
+				
+				emitter.start()
+			}
 			
 		}
 	}

@@ -9,10 +9,10 @@ package ca.studio236.GameJam
 		public var _path:FlxPath;
 		public var _speed:int;
 		
-		public function Enemy(character:HeartBoy, speed:int, X:Number=0, Y:Number=0, SimpleGraphic:Class=null, pValue:int=100)
+		public function Enemy(character:HeartBoy, speed:int, X:Number=0, Y:Number=0, SimpleGraphic:Class=null)
 		{
+			
 			_speed = speed;
-			pointValue = pValue;
 			_character = character;
 			super(X, Y, SimpleGraphic);
 		}

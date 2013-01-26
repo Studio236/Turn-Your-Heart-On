@@ -9,9 +9,11 @@ package ca.studio236.GameJam
 		public var graphic:Class;	
 			
 		public var time:Number = 100;
-		public function Plaque(character:HeartBoy, X:Number=0, Y:Number=0, SimpleGraphic:Class=null, pointValue:int=100 )
+		public function Plaque(character:HeartBoy, X:Number=0, Y:Number=0, SimpleGraphic:Class=null)
 		{
 			super(character, 100, X, Y, graphic);
+			this.health = 5;
+			this.pointValue = 1500;
 			_character = character;
 			this.solid = false;
 		}
