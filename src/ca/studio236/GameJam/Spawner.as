@@ -24,7 +24,22 @@ package ca.studio236.GameJam
 			
 			maxEnemies = Math.floor(score._score/100000)+5;
 			
-			
+			if(Math.random() < 0.00001) {
+				var zx = Math.random();
+				if(zx < 0.25) {
+					_group.add(new CholDerb(c,100,Math.floor(Math.random()*FlxG.width), -32));//top
+				}
+				else if(zx > 0.25 && z1 < 0.50) {
+					_group.add(new CholDerb(c,100,Math.floor(Math.random()*FlxG.width), FlxG.height + 32));//bottom
+				}
+				else if(zx > 0.50, z1 < 0.75) {
+					_group.add(new CholDerb(c,100,-32, Math.floor(Math.random()*FlxG.width)));//left
+				}
+				else if(zx > 0.75) {
+					_group.add(new CholDerb(c,100,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
+				}
+			}
+				
 			if(_group.length < maxEnemies) {
 				
 				
