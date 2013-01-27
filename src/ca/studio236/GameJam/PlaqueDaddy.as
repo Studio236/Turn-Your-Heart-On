@@ -6,6 +6,10 @@ package ca.studio236.GameJam
 	{
 		[Embed(source="../../../../assets/plaquedaddy.png")]
 		private var graphic:Class;
+		[Embed(source='../../../../assets/sounds/PlaqueDaddy_Death.mp3')]
+		private var se:Class;
+		[Embed(source='../../../../assets/sounds/PlaqueDaddy_Shoot.mp3')]
+		private var seShoot:Class;
 		
 		private var target:FlxPoint;
 		
@@ -43,13 +47,14 @@ package ca.studio236.GameJam
 				
 				
 				blobs.add(new Blob(this.x,this.y, Math.atan2(cx,cy)));
-				
+				FlxG.play(seShoot);
 			}
 		}
 		
 		
 		
 		override public function kill():void {
+			FlxG.play(se);
 			FlxG.timeScale = 0.5;
 			super.kill();
 		}

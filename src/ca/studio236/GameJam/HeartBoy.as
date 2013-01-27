@@ -6,6 +6,7 @@ package ca.studio236.GameJam
 	{
 		[Embed(source="../../../../assets/Heart_Character.png")]
 		public var graphic:Class;
+
 		
 		private static const PLAYER_ACCEL = 250;
 		
@@ -69,5 +70,6 @@ package ca.studio236.GameJam
 			super.update();
 			
 		}
+		
 	}
 }

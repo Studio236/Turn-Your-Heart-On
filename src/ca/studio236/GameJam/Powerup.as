@@ -6,6 +6,8 @@ package ca.studio236.GameJam
 	{
 		[Embed(source="../../../../assets/PowerUps/PU_2Bypass.png")]
 		public var Dub:Class;
+		[Embed(source='../../../../assets/sounds/Powerup.mp3')]
+		private var seBypass:Class;
 		
 		[Embed(source="../../../../assets/PowerUps/PU_3Bypass.png")]
 		public var Trip:Class;
@@ -15,12 +17,18 @@ package ca.studio236.GameJam
 		
 		[Embed(source="../../../../assets/PowerUps/PU_Caffeine.png")]
 		public var Caff:Class;
+		[Embed(source='../../../../assets/sounds/Caffeine.mp3')]
+		private var seCaffeine:Class;
 		
 		[Embed(source="../../../../assets/PowerUps/PU_Defib.png")]
 		public var Defib:Class;
+		[Embed(source='../../../../assets/sounds/Defib.mp3')]
+		private var seDefib:Class;
 		
 		[Embed(source="../../../../assets/PowerUps/PU_Health.png")]
 		public var Health:Class;
+		[Embed(source='../../../../assets/sounds/MaxHealth.mp3')]
+		private var seHealth:Class;
 		
 		public var _powerType:int;
 		public var _age:int;
@@ -62,31 +70,43 @@ package ca.studio236.GameJam
 		public function react(s:int, c:HeartBoy, h:FlxText, e:FlxGroup, b:int):int{
 			if(s==0){
 				//health up
+				FlxG.play(seHealth);
 				c.health = 3;
 				h.text = "<3 <3 <3";
+				return 0;
 			}else if(s==1){
 				//invincible for 10 seconds
+				FlxG.play(seCaffeine);
 				c.flicker(10);
+				return 1;
 			}else if(s==2){
 				//two direction shooting
+				FlxG.play(seBypass);
 				return 2;
 			}else if(s==3){
 				//three direction shooting
+				FlxG.play(seBypass);
 				return 3;
 			}else if(s==4){
 				//four firection shooting
+				FlxG.play(seBypass);
 				return 4;
 			}else if(s==5){
 				//deal 50 damange to every enemy
+				FlxG.play(seDefib);
 				FlxG.flash(0xffffffff, 4);
 				FlxG.shake(0.05, 1.5);
+				var tempScore:int = 0;
 				for(var i = 0; i < e.length; i++){
+					//calculate scores of detroyed enemies
+					tempScore += e.members[i].pointValue;
 					e.members[i].kill();
 					e.members[i].destroy();
 					e.clear();
 				}
+				return tempScore;
 			}
-			return 1;
+			return -1;
 		}
 	}
 }

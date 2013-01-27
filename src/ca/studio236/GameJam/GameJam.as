@@ -7,7 +7,7 @@ package ca.studio236.GameJam
 	{
 		public function GameJam()
 		{
-			super(480,320,PlayState,2); //Create a new FlxGame object and load "PlayState"
+			super(480,320,MenuState,2); //Create a new FlxGame object and load "PlayState"
 		}
 	}
 }

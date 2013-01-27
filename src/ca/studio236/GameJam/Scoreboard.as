@@ -18,12 +18,15 @@ package ca.studio236.GameJam
 		public function score(i:Number):Number {
 			
 			_score += i*multiplier;
+			
+			var m = i*multiplier;
+			
 			multiplier ++;
 			//some popup
 			
 			multiplierTimeout = 60;
 			
-			return i * multiplier;
+			return m;
 			
 			
 		}

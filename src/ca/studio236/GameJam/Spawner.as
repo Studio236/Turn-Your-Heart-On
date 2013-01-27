@@ -27,16 +27,16 @@ package ca.studio236.GameJam
 			if(Math.random() < 0.00001) {
 				var zx = Math.random();
 				if(zx < 0.25) {
-					_group.add(new CholDerb(c,100,Math.floor(Math.random()*FlxG.width), -32));//top
+					_group.add(new CholDerb(c,100,Math.floor(Math.random()*FlxG.width), -128));//top
 				}
 				else if(zx > 0.25 && z1 < 0.50) {
-					_group.add(new CholDerb(c,100,Math.floor(Math.random()*FlxG.width), FlxG.height + 32));//bottom
+					_group.add(new CholDerb(c,100,Math.floor(Math.random()*FlxG.width), FlxG.height + 128));//bottom
 				}
 				else if(zx > 0.50, z1 < 0.75) {
-					_group.add(new CholDerb(c,100,-32, Math.floor(Math.random()*FlxG.width)));//left
+					_group.add(new CholDerb(c,100,-128, Math.floor(Math.random()*FlxG.width)));//left
 				}
 				else if(zx > 0.75) {
-					_group.add(new CholDerb(c,100,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
+					_group.add(new CholDerb(c,100,FlxG.width + 128, Math.floor(Math.random()*FlxG.width)));//right
 				}
 			}
 				

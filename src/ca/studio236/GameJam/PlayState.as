@@ -13,11 +13,19 @@ package ca.studio236.GameJam
 		[Embed(source="../../../../assets/particle.png")]
 		private var particle:Class;
 		
-		[Embed(source = '../../../../assets/TargetCursor.png')] 
-		public var targetPNG:Class;
-		
 		[Embed(source='../../../../assets/Backdrop.png')]
 		public var bg:Class;
+		
+		[Embed(source='../../../../assets/sounds/ManStones.mp3')]
+		public var gameplayMusic:Class;
+		
+		[Embed(source='../../../../assets/sounds/Player_Death.mp3')]
+		private var hbDeath:Class;
+		
+		[Embed(source='../../../../assets/sounds/Player_Collide.mp3')]
+		private var hbCollide:Class;
+		
+		public var gpMusic:FlxSound;
 		
 		private var tilemap:FlxTilemap;
 		
@@ -35,6 +43,7 @@ package ca.studio236.GameJam
 		
 		private var emitter:FlxEmitter = new FlxEmitter(100,100);
 		
+		public var endTimer:FlxTimer = new FlxTimer();
 		
 		public var spawner:Spawner;
 		
@@ -52,10 +61,10 @@ package ca.studio236.GameJam
 			_PowerUpRandomizer = Math.floor(Math.random()*6);
 			powerup = new Powerup(_PowerUpRandomizer,Math.random()*FlxG.width,Math.random()*FlxG.height);
 			entities.add(powerup);
-			Bypass = 1;
+			Bypass = -1;
 			BypassTimer = -1;
 			//loads the crosshair
-			FlxG.mouse.show(targetPNG);
+			FlxG.playMusic(gameplayMusic);
 			prepTileMap();
 			add(footsteps);
 			sparay.maxSize = 200;
@@ -67,7 +76,6 @@ package ca.studio236.GameJam
 			add(bullets);
 			add(new Veins());
 			add(score);
-			
 			
 			health = new FlxText(FlxG.width - 60, FlxG.height - 20,100,"<3 <3 <3");
 			add(health);
@@ -107,12 +115,16 @@ package ca.studio236.GameJam
 		}
 		
 		override public function update():void {
+			if(endTimer.finished){
+				FlxG.switchState(new GameOverState);
+			}
+			
 			if(FlxG.keys.SPACE){
 				generateNewMap();
 			
 			}
 			if(BypassTimer < 0){
-				Bypass = 1;
+				Bypass = -1;
 			}else{
 				BypassTimer--;
 			}
@@ -120,17 +132,26 @@ package ca.studio236.GameJam
 			if(FlxG.mouse.pressed() && character.alive) {
 				
 				if(Bypass==2){
-					sparay.add(new Spray(sparay,character.x,character.y,character.angle));
-					sparay.add(new Spray(sparay,character.x,character.y,character.angle-180));
+					//sparay.add(new Spray(sparay,character.x,character.y,character.angle));
+					//sparay.add(new Spray(sparay,character.x,character.y,character.angle-180));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle+5));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle-5));
 				}else if(Bypass==3){
+					//sparay.add(new Spray(sparay,character.x,character.y,character.angle));
+					//sparay.add(new Spray(sparay,character.x,character.y,character.angle-120));
+					//sparay.add(new Spray(sparay,character.x,character.y,character.angle+120));
 					sparay.add(new Spray(sparay,character.x,character.y,character.angle));
-					sparay.add(new Spray(sparay,character.x,character.y,character.angle-120));
-					sparay.add(new Spray(sparay,character.x,character.y,character.angle+120));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle+15));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle-15));
 				}else if(Bypass==4){
-					sparay.add(new Spray(sparay,character.x,character.y,character.angle));
-					sparay.add(new Spray(sparay,character.x,character.y,character.angle-90));
-					sparay.add(new Spray(sparay,character.x,character.y,character.angle-180));
-					sparay.add(new Spray(sparay,character.x,character.y,character.angle-270));
+					//sparay.add(new Spray(sparay,character.x,character.y,character.angle));
+					//sparay.add(new Spray(sparay,character.x,character.y,character.angle-90));
+					//sparay.add(new Spray(sparay,character.x,character.y,character.angle-180));
+					//sparay.add(new Spray(sparay,character.x,character.y,character.angle-270));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle-15));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle-5));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle+5));
+					sparay.add(new Spray(sparay,character.x,character.y,character.angle+15));
 				}else{
 					sparay.add(new Spray(sparay,character.x,character.y,character.angle));
 				}
@@ -201,7 +222,7 @@ package ca.studio236.GameJam
 			if(slot < 0.001 && !powerup.alive){
 				_PowerUpRandomizer = Math.floor(Math.random()*6);
 				
-				powerup = new Powerup(_PowerUpRandomizer,Math.random()*FlxG.width,Math.random()*FlxG.height);
+				powerup = new Powerup(_PowerUpRandomizer,Math.random()*(FlxG.width-16),Math.random()*(FlxG.height-16));
 				
 				entities.add(powerup);
 			}
@@ -211,10 +232,20 @@ package ca.studio236.GameJam
 			Bypass = p.react(this._PowerUpRandomizer, this.character,this.health,this.enemies, this.Bypass);
 			if(Bypass==2){
 				BypassTimer=1000;
+				add(new PowerUpBlast(p.x, p.y, 100, "DOUBLE BYPASS"));
 			}else if(Bypass==3){
 				BypassTimer=500;
+				add(new PowerUpBlast(p.x, p.y, 100, "TRIPLED BYPASS"));
 			}else if(Bypass==4){
 				BypassTimer=250;
+				add(new PowerUpBlast(p.x, p.y, 100, "QUADRUPLE BYPASS"));
+			}else if(Bypass==0){
+				add(new PowerUpBlast(p.x, p.y, 100, "MAX HEALTH"));
+			}else if(Bypass==1){
+				add(new PowerUpBlast(p.x, p.y, 100, "CAFFEINE"));
+			}else if(Bypass>1000){
+				score._score += Bypass;
+				add(new PowerUpBlast(p.x, p.y, 100, "DEFIBRILLATOR"));
 			}
 			p.kill();
 			p.destroy();
@@ -249,6 +280,7 @@ package ca.studio236.GameJam
 			}
 			
 			if(c.flickering == false){
+				FlxG.play(hbCollide);
 				c.hurt(1);
 				if(c.health == 2){
 					setHealth(2);
@@ -257,16 +289,19 @@ package ca.studio236.GameJam
 				}
 			}
 			c.flicker(1);
+			
 			if(c.health <= 0){
 				//game over
+				FlxG.play(hbDeath);
 				emitter.x = character.x;
 				emitter.y = character.y; 
 				FlxG.shake(0.1,0.5); 
 				health.text = "GAME OVER";
 				health.flicker(-1);
 				emitter.makeParticles(particle,150);
-				emitter.start()
-				
+				emitter.start();
+				endTimer.time = 4;
+				endTimer.start();
 			}else{
 				//push back
 			}

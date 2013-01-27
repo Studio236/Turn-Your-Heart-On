@@ -14,6 +14,9 @@ package ca.studio236.GameJam
 		[Embed(source="../../../../assets/particle.png")]
 		private var particle:Class;
 		
+		[Embed(source='../../../../assets/sounds/Worm_Death.mp3')]
+		private var se:Class;
+		
 		public var time:int;
 		
 		public var target:FlxPoint = new FlxPoint(0,0);
@@ -77,6 +80,7 @@ package ca.studio236.GameJam
 		
 		override public function kill():void {
 			
+			FlxG.play(se);
 			
 			for(var i = 0; i < 7; i++) {
 				

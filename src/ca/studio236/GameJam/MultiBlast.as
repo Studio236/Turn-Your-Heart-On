@@ -9,7 +9,10 @@ package ca.studio236.GameJam
 		public function MultiBlast(e:Enemy,s:Scoreboard)
 		{
 			i = e.pointValue;
-			var n =  "x" + s.multiplier.toString();
+			var m = s.multiplier - 1;
+			if(m>1){
+				var n =  "x" + m.toString();
+			}
 			super(e.x, e.y, 100, n);
 		}
 		

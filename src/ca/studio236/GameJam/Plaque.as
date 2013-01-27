@@ -7,6 +7,8 @@ package ca.studio236.GameJam
 		
 		[Embed(source="../../../../assets/plaque.png")]
 		public var graphic:Class;	
+		[Embed(source='../../../../assets/sounds/Plaque_Death.mp3')]
+		private var se:Class;
 			
 		public var time:Number = 100;
 		public function Plaque(character:HeartBoy, X:Number=0, Y:Number=0, SimpleGraphic:Class=null)
@@ -36,6 +38,11 @@ package ca.studio236.GameJam
 			
 			super.update();
 			
+		}
+		
+		override public function kill():void{
+			FlxG.play(se);
+			super.kill();
 		}
 	}
 }
