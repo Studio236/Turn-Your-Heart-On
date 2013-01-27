@@ -27,6 +27,8 @@ package ca.studio236.GameJam
 		
 		private var enemies:FlxGroup = new FlxGroup();
 		
+		private var bullets:FlxGroup = new FlxGroup();
+		
 		private var sparay:FlxGroup = new FlxGroup();
 		
 		private var footsteps:FlxGroup = new FlxGroup();
@@ -59,20 +61,19 @@ package ca.studio236.GameJam
 			sparay.maxSize = 200;
 			entities.add(sparay);
 			entities.add(character);
-			for(var i = 0; i < 1; i ++) {
-				enemies.add(new HeartWorm(character,200,200));
-			}
 			entities.add(enemies);
 			add(entities);
 			add(emitter);
+			add(bullets);
 			add(new Veins());
 			add(score);
+			
 			
 			health = new FlxText(FlxG.width - 60, FlxG.height - 20,100,"<3 <3 <3");
 			add(health);
 			
 			
-			spawner = new Spawner(character,enemies,score,this);
+			spawner = new Spawner(character,enemies,score,bullets);
 		}
 		
 		public function prepTileMap() {
@@ -148,6 +149,7 @@ package ca.studio236.GameJam
 			FlxG.collide(entities,tilemap);
 			FlxG.collide(enemies,character,playerHit);
 			FlxG.overlap(character,powerup, characterPowerUpHandler); 
+			FlxG.overlap(bullets,character,playerHit); 
 			spawner.tickSpawner();
 			
 			
@@ -160,7 +162,7 @@ package ca.studio236.GameJam
 		}
 		
 		public function overlapHandle(o,b) {
-			trace('test');
+			//trace('test');
 			
 			b.kill();
 			b.destroy();
@@ -173,6 +175,7 @@ package ca.studio236.GameJam
 				emitter.x = o.x;
 				emitter.y = o.y;
 				add(new Pointblast(o,score));
+				add(new MultiBlast(o,score));
 				o.kill();
 				o.destroy();
 				FlxG.shake(0.01,0.1); 
@@ -187,6 +190,13 @@ package ca.studio236.GameJam
 		public function PowerUpRandomizer()
 		{
 			var slot:Number = Math.random();
+			
+			if(powerup._age<0) {
+				powerup.kill();
+				powerup.destroy();
+			}else if(powerup._age<100){
+				powerup.flicker(100);
+			}
 			
 			if(slot < 0.001 && !powerup.alive){
 				_PowerUpRandomizer = Math.floor(Math.random()*6);

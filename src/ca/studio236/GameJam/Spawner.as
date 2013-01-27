@@ -10,13 +10,13 @@ package ca.studio236.GameJam
 		private var _group:FlxGroup;
 		private var score:Scoreboard;
 		private var c:HeartBoy;
-		private var p:PlayState
-		public function Spawner(character,group:FlxGroup,s:Scoreboard,ref:PlayState)
+		private var p:FlxGroup;
+		public function Spawner(character,group:FlxGroup,s:Scoreboard,bull:FlxGroup)
 		{
 			_group = group;
 			score = s;
 			c =character;
-			
+			p = bull;
 			
 		}
 		

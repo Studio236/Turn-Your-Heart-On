@@ -1,8 +1,6 @@
 package ca.studio236.GameJam
 {
-	import org.flixel.FlxGroup;
-	import org.flixel.FlxSprite;
-	import org.flixel.FlxText;
+	import org.flixel.*; 
 	
 	public class Powerup extends FlxSprite
 	{
@@ -31,7 +29,7 @@ package ca.studio236.GameJam
 		{
 			super(X, Y, SimpleGraphic);
 			_powerType = powerType;
-			_age = 10000;
+			_age = 700;
 			
 			if(_powerType==0){
 				this.loadGraphic(Health,true,false,16,16);
@@ -52,11 +50,13 @@ package ca.studio236.GameJam
 				this.loadGraphic(Defib,true,false,16,16);
 				//deal 10 damange to every enemy
 			}
+			this.addAnimation("spin",[0,1,2,3,4,5],10);
+			this.play("spin");
 		}
 		
 		override public function update():void
 		{
-			
+			_age -= 1;
 		}
 		
 		public function react(s:int, c:HeartBoy, h:FlxText, e:FlxGroup, b:int):int{
@@ -78,6 +78,8 @@ package ca.studio236.GameJam
 				return 4;
 			}else if(s==5){
 				//deal 50 damange to every enemy
+				FlxG.flash(0xffffffff, 4);
+				FlxG.shake(0.05, 1.5);
 				for(var i = 0; i < e.length; i++){
 					e.members[i].kill();
 					e.members[i].destroy();

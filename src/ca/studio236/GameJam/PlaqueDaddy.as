@@ -11,21 +11,20 @@ package ca.studio236.GameJam
 		
 		private var time = 0;
 		
-		private var blobs:FlxGroup = new FlxGroup();
-		private var clag:PlayState;
+		private var blobs:FlxGroup;
 		
-		public function PlaqueDaddy(state:PlayState, character:HeartBoy, speed:int, X:Number=0, Y:Number=0, SimpleGraphic:Class=null)
+		public function PlaqueDaddy(b, character:HeartBoy, speed:int, X:Number=0, Y:Number=0, SimpleGraphic:Class=null)
 		{
 			super(character, speed, X, Y, SimpleGraphic);
 			this.health = 50;
-			clag = state;
+			blobs = b;
 			target = new FlxPoint(X,Y);
 			this.pointValue = 3000;
 			this.loadGraphic(graphic,true);
 			this.addAnimation("main",[0,1],3);
 			this.play("main");
 			this.immovable = true;
-			FlxG.state.add(blobs);
+			//FlxG.state.add(blobs);
 		}
 		
 		override public function update():void {
@@ -44,13 +43,10 @@ package ca.studio236.GameJam
 				
 				
 				blobs.add(new Blob(this.x,this.y, Math.atan2(cx,cy)));
-				FlxG.collide(blobs,_character, marder);
+				
 			}
 		}
 		
-		public function marder(e,c) {
-			   clag.playerHit(e,c);
-		}
 		
 		
 		override public function kill():void {
