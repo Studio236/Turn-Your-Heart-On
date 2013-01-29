@@ -33,7 +33,7 @@ package ca.studio236.GameJam
 		
 		override public function update():void {
 			time++;
-			target.x += (_character.x - target.x  )*0.01;
+			target.x += (_character.x - target.x)*0.01;
 			target.y += (_character.y - target.y)*0.01;
 			
 			this.x = Math.cos(time/100)*150 + target.x;

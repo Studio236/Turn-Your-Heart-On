@@ -9,6 +9,11 @@ package ca.studio236.GameJam
 		public var graphic:Class;	
 		[Embed(source='../../../../assets/sounds/Plaque_Death.mp3')]
 		private var se:Class;
+		
+		[Embed(source='../../../../assets/sounds/plak.mp3')]
+		private var seEnter:Class;
+		
+		
 			
 		public var time:Number = 100;
 		public function Plaque(character:HeartBoy, X:Number=0, Y:Number=0, SimpleGraphic:Class=null)
@@ -17,6 +22,7 @@ package ca.studio236.GameJam
 			this.health = 5;
 			this.pointValue = 1500;
 			_character = character;
+			
 			
 		}
 		
@@ -37,6 +43,8 @@ package ca.studio236.GameJam
 			this.y += Math.cos(time/20);
 			
 			super.update();
+			
+			
 			
 		}
 		

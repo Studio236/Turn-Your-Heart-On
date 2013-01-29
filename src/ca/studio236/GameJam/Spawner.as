@@ -2,25 +2,36 @@ package ca.studio236.GameJam
 {
 	import ca.studio236.GameJam.PlaqueDaddy;
 	
+	import flash.geom.Rectangle;
+	
 	import org.flixel.*;
+	import org.flixel.plugin.photonstorm.*;
 	
 	public class Spawner
 	{
+		[Embed(source="../../../../assets/260.png")] 
+		private var onTheBall:Class;
 		private var maxEnemies:Number = 5;
 		private var _group:FlxGroup;
 		private var score:Scoreboard;
 		private var c:HeartBoy;
-		private var p:FlxGroup;
+		private var b:FlxGroup;
 		private var boss = true;
 		private var bossSpawned = false;
 		private var bossHasSpawned = false;
-		public function Spawner(character,group:FlxGroup,s:Scoreboard,bull:FlxGroup)
+		private var spawnstate = "normal";
+		private var spawnstatetimer = 0;
+		private var _hud:FlxGroup;
+		[Embed(source='../../../../assets/sounds/eventalarm.mp3')]
+		private var ALARM:Class;
+	
+		public function Spawner(character,group:FlxGroup,s:Scoreboard,bull:FlxGroup,hud:FlxGroup)
 		{
+			_hud = hud;
 			_group = group;
 			score = s;
 			c =character;
-			p = bull;
-			
+			b = bull;
 		}
 		
 		public function tickSpawner() {
@@ -29,7 +40,7 @@ package ca.studio236.GameJam
 			
 			
 			if(PlayState.boss && !bossSpawned) {
-				_group.add(new BossTheClot(p,c,0));
+				_group.add(new BossTheClot(b,c,0));
 				bossSpawned = true;
 			}else if(PlayState.boss){
 				
@@ -53,8 +64,50 @@ package ca.studio236.GameJam
 					_group.add(new CholDerb(c,100,FlxG.width + 128, Math.floor(Math.random()*FlxG.width)));//right
 				}
 			}
+			
+			
+			//spawn events
+			
+			var spawnevent = Math.random();
+			
+			if(spawnevent < 0.0005 && spawnstate == "normal") {
 				
-			if(_group.length < maxEnemies && !PlayState.boss) {
+				//PLAK ATTACK
+				this.spawnstatetimer = 1000;
+				this.spawnstate = 'plak_attack';
+				_hud.add(new TextBlast(_hud,"PLAK ATTACK!!!"));
+				FlxG.play(ALARM);
+				
+			}
+			
+			
+			if(spawnstate == 'plak_attack' && spawnstatetimer > 0) {
+				this.spawnstatetimer --;
+				if(this.spawnstatetimer % 30 == 0) {
+					var pa = Math.random();
+					if(pa < 0.25) {
+						
+						_group.add(new Plaque(c,Math.floor(Math.random()*FlxG.width), -32));//top
+					}
+					else if(pa > 0.25 && pa < 0.50) {
+						
+						_group.add(new Plaque(c,Math.floor(Math.random()*FlxG.width), FlxG.height + 32));//bottom
+					}
+					else if(pa > 0.50, pa < 0.75) {
+						_group.add(new Plaque(c,-32, Math.floor(Math.random()*FlxG.width)));//left
+					}
+					else if(pa > 0.75) {
+						
+						_group.add(new Plaque(c,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//left
+					}
+				}
+				
+			}else if (spawnstatetimer <= 0) {
+				this.spawnstate = 'normal'
+			}
+			
+				
+			if(_group.length < maxEnemies && !PlayState.boss && spawnstate == "normal") {
 				
 				
 				var rand = Math.random();
@@ -82,7 +135,7 @@ package ca.studio236.GameJam
 								_group.add(new CholSmall(c,100,-32, Math.floor(Math.random()*FlxG.width)));//left
 							}
 							else if(z1 > 0.75) {
-								_group.add(new CholSmall(c,100,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
+								_group.add(new Plaque(c,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//left
 							}
 							
 						}
@@ -175,7 +228,7 @@ package ca.studio236.GameJam
 								}else if(z44 < 0.90){
 									_group.add(new Plaque(c,Math.floor(Math.random()*FlxG.width), -32));//top
 								}else{
-									_group.add(new PlaqueDaddy(p,c,Math.floor(Math.random()*FlxG.width), -32));
+									_group.add(new PlaqueDaddy(b,c,Math.floor(Math.random()*FlxG.width), -32));
 								}
 							}
 							else if(z4 > 0.25 && z44 < 0.50) {
@@ -186,7 +239,7 @@ package ca.studio236.GameJam
 								}else if(z44 < 0.90){
 									_group.add(new Plaque(c,Math.floor(Math.random()*FlxG.width), FlxG.height + 32));//bottom
 								}else{
-									_group.add(new PlaqueDaddy(p,c,Math.floor(Math.random()*FlxG.width), FlxG.height + 32));//bottom
+									_group.add(new PlaqueDaddy(b,c,Math.floor(Math.random()*FlxG.width), FlxG.height + 32));//bottom
 								}
 							}
 							else if(z4 > 0.50, z4 < 0.75) {
@@ -197,7 +250,7 @@ package ca.studio236.GameJam
 								}else if(z44 < 0.90){
 									_group.add(new Plaque(c,-32, Math.floor(Math.random()*FlxG.width)));//left
 								}else{
-									_group.add(new PlaqueDaddy(p,c,-32, Math.floor(Math.random()*FlxG.width)));//left
+									_group.add(new PlaqueDaddy(b,c,-32, Math.floor(Math.random()*FlxG.width)));//left
 								}
 							}
 							else if(z4 > 0.75) {
@@ -208,7 +261,7 @@ package ca.studio236.GameJam
 								}else if(z44 < 0.90){
 									_group.add(new Plaque(c,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
 								}else{
-									_group.add(new PlaqueDaddy(p,c,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
+									_group.add(new PlaqueDaddy(b,c,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
 								}
 							}
 						}
@@ -225,7 +278,7 @@ package ca.studio236.GameJam
 								}else if(z55 < 0.80){
 									_group.add(new Plaque(c,Math.floor(Math.random()*FlxG.width), -32));//top
 								}else if(z55 < 0.90){
-									_group.add(new PlaqueDaddy(p,c,Math.floor(Math.random()*FlxG.width), -32));
+									_group.add(new PlaqueDaddy(b,c,Math.floor(Math.random()*FlxG.width), -32));
 								}else{
 									_group.add(new HeartWorm(c,Math.floor(Math.random()*FlxG.width), -32));
 								}
@@ -238,7 +291,7 @@ package ca.studio236.GameJam
 								}else if(z55 < 0.80){
 									_group.add(new Plaque(c,Math.floor(Math.random()*FlxG.width), FlxG.height + 32));//bottom
 								}else if(z55 < 0.90){
-									_group.add(new PlaqueDaddy(p,c,Math.floor(Math.random()*FlxG.width), FlxG.height + 32));//bottom
+									_group.add(new PlaqueDaddy(b,c,Math.floor(Math.random()*FlxG.width), FlxG.height + 32));//bottom
 								}else{
 									_group.add(new HeartWorm(c,Math.floor(Math.random()*FlxG.width), FlxG.height + 32));
 								}
@@ -251,7 +304,7 @@ package ca.studio236.GameJam
 								}else if(z55 < 0.80){
 									_group.add(new Plaque(c,-32, Math.floor(Math.random()*FlxG.width)));//left
 								}else if(z55 < 0.90){
-									_group.add(new PlaqueDaddy(p,c,-32, Math.floor(Math.random()*FlxG.width)));//left
+									_group.add(new PlaqueDaddy(b,c,-32, Math.floor(Math.random()*FlxG.width)));//left
 								}else{
 									_group.add(new HeartWorm(c,-32, Math.floor(Math.random()*FlxG.width)));//left
 								}
@@ -264,13 +317,13 @@ package ca.studio236.GameJam
 								}else if(z55 < 0.80){
 									_group.add(new Plaque(c,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
 								}else if(z55 < 0.90){
-									_group.add(new PlaqueDaddy(p,c,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
+									_group.add(new PlaqueDaddy(b,c,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
 								}else{
 									_group.add(new HeartWorm(c,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
 								}
 							}
 							else if(bossHasSpawned && Math.random() < 0.0001){
-								_group.add(new BossTheClot(p,c,0));
+								_group.add(new BossTheClot(b,c,0));
 							}
 						}
 					}

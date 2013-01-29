@@ -1,8 +1,9 @@
 package ca.studio236.GameJam
 {
 	import org.flixel.*; //Allows you to refer to flixel objects in your code
-	[SWF(width="960", height="650", backgroundColor="#FFFFFFF")] //Set the size and color of the Flash file
 	
+	[SWF(width="955", height="650", backgroundColor="#000000")] //Set the size and color of the Flash file
+	[Frame(factoryClass="ca.studio236.GameJam.Preloader")]
 	public class GameJam extends FlxGame
 	{
 		public function GameJam()

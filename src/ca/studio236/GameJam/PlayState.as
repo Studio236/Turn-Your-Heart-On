@@ -1,6 +1,7 @@
 package ca.studio236.GameJam
 {
 	import org.flixel.*;
+	import org.flixel.plugin.photonstorm.*;
 	
 	public class PlayState extends FlxState
 	{
@@ -57,6 +58,7 @@ package ca.studio236.GameJam
 		public var score:Scoreboard = new Scoreboard(5,FlxG.height - 20,100);
 		
 		public var health:FlxText;
+		public var hud = new FlxGroup();
 		private var powerup:Powerup;
 		private var _PowerUpRandomizer:int;
 		public var Bypass:int;
@@ -64,6 +66,7 @@ package ca.studio236.GameJam
 		
 		override public function create():void
 		{
+			
 			add(new FlxSprite(0,0,bg));
 			_PowerUpRandomizer = Math.floor(Math.random()*6);
 			powerup = new Powerup(_PowerUpRandomizer,Math.random()*FlxG.width,Math.random()*FlxG.height);
@@ -82,13 +85,14 @@ package ca.studio236.GameJam
 			add(emitter);
 			add(bullets);
 			add(new Veins());
+			add(hud);
 			add(score);
 			
 			health = new FlxText(FlxG.width - 60, FlxG.height - 20,100,"<3 <3 <3");
 			add(health);
 			
 			
-			spawner = new Spawner(character,enemies,score,bullets);
+			spawner = new Spawner(character,enemies,score,bullets,hud);
 		}
 		
 		public function prepTileMap() {
@@ -193,9 +197,9 @@ package ca.studio236.GameJam
 			
 			
 			super.update();
-			FlxG.collide(enemies,sparay,overlapHandle);
+			FlxG.overlap(enemies,sparay,overlapHandle);
 			FlxG.collide(entities,tilemap);
-			FlxG.collide(enemies,character,playerHit);
+			FlxG.overlap(enemies,character,playerHit);
 			FlxG.overlap(character,powerup, characterPowerUpHandler); 
 			FlxG.overlap(bullets,character,playerHit); 
 			spawner.tickSpawner();
@@ -211,26 +215,27 @@ package ca.studio236.GameJam
 		
 		public function overlapHandle(o,b) {
 			//trace('test');
-			
-			b.kill();
-			b.destroy();
-			sparay.remove(b,true);
-			
-			
-			o.hurt(1);
-			if(o.health <= 1) {
-				enemies.remove(o,true);
-				emitter.x = o.x;
-				emitter.y = o.y;
-				add(new Pointblast(o,score));
-				add(new MultiBlast(o,score));
-				o.kill();
-				o.destroy();
-				FlxG.shake(0.01,0.1); 
-				//enemies.add(new PlaqueDaddy(character,-10,Math.random()*FlxG.height));
-				emitter.makeParticles(particle,10);
+			if (FlxCollision.pixelPerfectCheck(o, b)) {
+				b.kill();
+				b.destroy();
+				sparay.remove(b,true);
 				
-				emitter.start()
+				
+				o.hurt(1);
+				if(o.health <= 1) {
+					enemies.remove(o,true);
+					emitter.x = o.x;
+					emitter.y = o.y;
+					add(new Pointblast(o,score));
+					add(new MultiBlast(o,score));
+					o.kill();
+					o.destroy();
+					FlxG.shake(0.01,0.1); 
+					//enemies.add(new PlaqueDaddy(character,-10,Math.random()*FlxG.height));
+					emitter.makeParticles(particle,10);
+					
+					emitter.start()
+				}
 			}
 			
 		}
@@ -289,49 +294,51 @@ package ca.studio236.GameJam
 		}
 		
 		public function playerHit(e,c){
-			if(c.flickering == false){
-				e.hurt(1);
-			}
-			if(e.health <= 1) {
-				enemies.remove(e,true);
-				emitter.x = e.x;
-				emitter.y = e.y;
-				add(new Pointblast(e,score));
-				e.kill();
-				e.destroy();
-				FlxG.shake(0.01,0.1); 
-				emitter.makeParticles(particle,10);
-				emitter.start()
-			}else{
-				//push back
-			}
-			
-			if(c.flickering == false){
-				FlxG.play(hbCollide);
-				c.hurt(1);
-				if(c.health == 2){
-					setHealth(2);
-				}else if(c.health == 1){
-					setHealth(1);
+			if (FlxCollision.pixelPerfectCheck(e, c)) {
+				if(c.flickering == false){
+					e.hurt(100);
 				}
-			}
-			c.flicker(1);
+				if(e.health <= 1) {
+					enemies.remove(e,true);
+					emitter.x = e.x;
+					emitter.y = e.y;
+					add(new Pointblast(e,score));
+					e.kill();
+					e.destroy();
+					FlxG.shake(0.01,0.1); 
+					emitter.makeParticles(particle,10);
+					emitter.start()
+				}else{
+					//push back
+				}
+				
+				if(c.flickering == false){
+					FlxG.play(hbCollide);
+					c.hurt(1);
+					if(c.health == 2){
+						setHealth(2);
+					}else if(c.health == 1){
+						setHealth(1);
+					}
+				}
+				c.flicker(1);
 			
-			if(c.health <= 0){
-				//game over
-				FlxG.play(hbDeath);
-				boss = false;
-				emitter.x = character.x;
-				emitter.y = character.y; 
-				FlxG.shake(0.1,0.5); 
-				health.text = "GAME OVER";
-				health.flicker(-1);
-				emitter.makeParticles(particle,150);
-				emitter.start();
-				endTimer.time = 4;
-				endTimer.start();
-			}else{
-				//push back
+				if(c.health <= 0){
+					//game over
+					FlxG.play(hbDeath);
+					boss = false;
+					emitter.x = character.x;
+					emitter.y = character.y; 
+					FlxG.shake(0.1,0.5); 
+					health.text = "GAME OVER";
+					health.flicker(-1);
+					emitter.makeParticles(particle,150);
+					emitter.start();
+					endTimer.time = 4;
+					endTimer.start();
+				}else{
+					//push back
+				}
 			}
 		}
 		

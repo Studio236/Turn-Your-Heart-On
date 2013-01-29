@@ -10,7 +10,7 @@ package ca.studio236.GameJam
 		public function Blob(X:Number=0, Y:Number=0, direction:Number = 0 )
 		{
 			super(X, Y);
-			health = 100;
+			health = 9999999;
 			this.velocity.x = Math.sin(direction)*100;
 			this.velocity.y = Math.cos(direction)*100;
 			this.loadGraphic(graphic,true);

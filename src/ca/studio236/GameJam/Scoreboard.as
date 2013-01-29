@@ -1,6 +1,6 @@
 package ca.studio236.GameJam
 {
-	import org.flixel.FlxText;
+	import org.flixel.*;
 	
 	public class Scoreboard extends FlxText
 	{
@@ -8,6 +8,7 @@ package ca.studio236.GameJam
 		public var _score:int;	
 		public var multiplier = 1;
 		public var multiplierTimeout = 0;
+		public var combo = 0;
 		public function Scoreboard(X:Number, Y:Number, Width:uint, Text:String=null, EmbeddedFont:Boolean=true)
 		{
 			_score = 0;
@@ -21,8 +22,19 @@ package ca.studio236.GameJam
 			
 			var m = i*multiplier;
 			
-			multiplier ++;
-			//some popup
+			if(multiplier < 5) {
+				multiplier ++;
+				combo++;
+			}else{
+				multiplier = 5;
+				combo++;
+				if(combo == 10) {
+					FlxG.state.add(new TextBlast(FlxG.state,"TEN-SANITY!"));
+				}else{
+					FlxG.state.add(new TextBlast(FlxG.state,combo + "x COMBO",true));
+				}
+			}
+			
 			
 			multiplierTimeout = 60;
 			
@@ -41,6 +53,7 @@ package ca.studio236.GameJam
 				multiplierTimeout--;
 			}else if( multiplierTimeout <= 0 ){
 				multiplier = 1;
+				combo = 1;
 			}
 			
 			

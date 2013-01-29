@@ -1,9 +1,9 @@
 package ca.studio236.GameJam
 {
 	import org.flixel.FlxG;
+	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
-	import org.flixel.FlxSprite;
 
 	public class GameOverState extends FlxState
 	{
@@ -32,6 +32,8 @@ package ca.studio236.GameJam
 			background.play("walk");
 			
 			add(background);
+			
+			
 			
 			score = PlayState.finalScore;
 			
@@ -70,6 +72,7 @@ package ca.studio236.GameJam
 			add(t_playAgain); // add text
 			
 			add(t_score);
+			
 		}
 		
 		public function goToGame(){
