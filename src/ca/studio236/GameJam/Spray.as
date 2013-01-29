@@ -6,8 +6,6 @@ package ca.studio236.GameJam
 	{
 		[Embed(source='../../../../assets/BloodBullet.png')]
 		private var cg:Class;
-		[Embed(source='../../../../assets/sounds/Player_Shooting.mp3')]
-		private var pShoot:Class;
 		
 		private var age:Number = 70; 
 		private var ref:FlxGroup;
@@ -20,7 +18,6 @@ package ca.studio236.GameJam
 			direction -= 90;
 			this.velocity.y = Math.sin(direction*0.01745)*200 + Math.random()*5;
 			this.velocity.x = Math.cos(direction*0.01745)*200 + Math.random()*5;
-			FlxG.play(pShoot);
 		}
 		
 		override public function update():void {

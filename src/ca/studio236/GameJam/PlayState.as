@@ -25,6 +25,9 @@ package ca.studio236.GameJam
 		[Embed(source='../../../../assets/sounds/Player_Collide.mp3')]
 		private var hbCollide:Class;
 		
+		[Embed(source='../../../../assets/sounds/MaxHealth.mp3')]
+		private var seHealth:Class;
+		
 		public var gpMusic:FlxSound;
 		
 		private var tilemap:FlxTilemap;
@@ -46,6 +49,10 @@ package ca.studio236.GameJam
 		public var endTimer:FlxTimer = new FlxTimer();
 		
 		public var spawner:Spawner;
+		
+		public static var boss = false;
+		
+		public static var finalScore:Number;
 		
 		public var score:Scoreboard = new Scoreboard(5,FlxG.height - 20,100);
 		
@@ -115,14 +122,36 @@ package ca.studio236.GameJam
 		}
 		
 		override public function update():void {
+			
 			if(endTimer.finished){
+				finalScore = score._score;
 				FlxG.switchState(new GameOverState);
 			}
 			
 			if(FlxG.keys.SPACE){
 				generateNewMap();
-			
 			}
+			
+			//Dev Add Point Cheat
+			if(FlxG.keys.SHIFT && FlxG.keys.PLUS)
+			{
+				score._score += 1000;
+			}
+			
+			//Dev 1000000 Point Cheat
+			if(FlxG.keys.SHIFT && FlxG.keys.M)
+			{
+				score._score = 1000000;
+			}
+			
+			//Dev Full Health Cheat
+			if(FlxG.keys.SHIFT && FlxG.keys.H)
+			{
+				FlxG.play(seHealth);
+				character.health = 3;
+				setHealth(3);
+			}
+			
 			if(BypassTimer < 0){
 				Bypass = -1;
 			}else{
@@ -156,9 +185,7 @@ package ca.studio236.GameJam
 					sparay.add(new Spray(sparay,character.x,character.y,character.angle));
 				}
 			}
-			PowerUpRandomizer();
-
-			
+			PowerUpRandomizer();			
 			
 			if(FlxG.timeScale <= 1.0) {
 				FlxG.timeScale += 0.02;
@@ -234,10 +261,10 @@ package ca.studio236.GameJam
 				BypassTimer=1000;
 				add(new PowerUpBlast(p.x, p.y, 100, "DOUBLE BYPASS"));
 			}else if(Bypass==3){
-				BypassTimer=500;
+				BypassTimer=750;
 				add(new PowerUpBlast(p.x, p.y, 100, "TRIPLED BYPASS"));
 			}else if(Bypass==4){
-				BypassTimer=250;
+				BypassTimer=500;
 				add(new PowerUpBlast(p.x, p.y, 100, "QUADRUPLE BYPASS"));
 			}else if(Bypass==0){
 				add(new PowerUpBlast(p.x, p.y, 100, "MAX HEALTH"));
@@ -293,6 +320,7 @@ package ca.studio236.GameJam
 			if(c.health <= 0){
 				//game over
 				FlxG.play(hbDeath);
+				boss = false;
 				emitter.x = character.x;
 				emitter.y = character.y; 
 				FlxG.shake(0.1,0.5); 

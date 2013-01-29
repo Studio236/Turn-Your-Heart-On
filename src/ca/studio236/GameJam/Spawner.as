@@ -11,6 +11,9 @@ package ca.studio236.GameJam
 		private var score:Scoreboard;
 		private var c:HeartBoy;
 		private var p:FlxGroup;
+		private var boss = true;
+		private var bossSpawned = false;
+		private var bossHasSpawned = false;
 		public function Spawner(character,group:FlxGroup,s:Scoreboard,bull:FlxGroup)
 		{
 			_group = group;
@@ -24,6 +27,17 @@ package ca.studio236.GameJam
 			
 			maxEnemies = Math.floor(score._score/100000)+5;
 			
+			
+			if(PlayState.boss && !bossSpawned) {
+				_group.add(new BossTheClot(p,c,0));
+				bossSpawned = true;
+			}else if(PlayState.boss){
+				
+			}else{
+			if(score._score >= 150000 && !bossHasSpawned) {
+				PlayState.boss = true;
+				bossHasSpawned = true;
+			}
 			if(Math.random() < 0.00001) {
 				var zx = Math.random();
 				if(zx < 0.25) {
@@ -40,7 +54,7 @@ package ca.studio236.GameJam
 				}
 			}
 				
-			if(_group.length < maxEnemies) {
+			if(_group.length < maxEnemies && !PlayState.boss) {
 				
 				
 				var rand = Math.random();
@@ -255,10 +269,13 @@ package ca.studio236.GameJam
 									_group.add(new HeartWorm(c,FlxG.width + 32, Math.floor(Math.random()*FlxG.width)));//right
 								}
 							}
+							else if(bossHasSpawned && Math.random() < 0.0001){
+								_group.add(new BossTheClot(p,c,0));
+							}
 						}
 					}
 				}
 			}
-		}
+		}}
 	}
 }

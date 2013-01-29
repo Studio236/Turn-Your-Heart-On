@@ -12,7 +12,7 @@ package ca.studio236.GameJam
 		
 		public function HeartBoy()
 		{
-			super(300, 300);
+			super(FlxG.width/2, FlxG.height/2);
 			this.solid = true;
 			this.loadGraphic(graphic,true,false,32,32);
 			this.addAnimation("walk",[0,1,2,3],10);
