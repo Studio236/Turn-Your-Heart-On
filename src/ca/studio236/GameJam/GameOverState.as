@@ -19,6 +19,7 @@ package ca.studio236.GameJam
 		public var t_judgement:FlxText;
 		
 		public var score:Number;
+		public var isCheater:Boolean;
 		
 		public var background:FlxSprite = new FlxSprite(0,0,null);
 		
@@ -33,9 +34,13 @@ package ca.studio236.GameJam
 			
 			add(background);
 			
+			isCheater = PlayState.cheater;
 			
-			
-			score = PlayState.finalScore;
+			if(!isCheater){
+				score = PlayState.finalScore;
+			}else{
+				score = 0;
+			}
 			
 			t_gameover = new FlxText(250, 15, 300, "GAME OVER");
 			t_gameover.size = 30;
@@ -45,24 +50,28 @@ package ca.studio236.GameJam
 			t_score = new FlxText(250, 50, 300, "Final Score: " + score.toString());
 			t_score.size = 15;
 			
-			if(score > 1000000){
-				t_judgement = new FlxText(250, 72, 300, "RANK: ARTERIAS GOD OF BLOOD");
-			}else if(score > 500000){
-				t_judgement = new FlxText(250, 72, 300, "RANK: LORD OF THE LYMPHOS");
-			}else if(score>400000){
-				t_judgement = new FlxText(250, 72, 300, "RANK: MAJOR METABOLIC");
-			}else if(score>300000){
-				t_judgement = new FlxText(250, 72, 300, "RANK: CAPTAIN CRENATION");
-			}else if(score>200000){
-				t_judgement = new FlxText(250, 72, 300, "RANK: LIEUTENANT LIPID");
-			}else if(score>100000){
-				t_judgement = new FlxText(250, 72, 300, "RANK: SERGEANT SEPSIS");
-			}else if(score>50000){
-				t_judgement = new FlxText(250, 72, 300, "RANK: CORPORAL CARDIO");
-			}else if(score>20000){
-				t_judgement = new FlxText(250, 72, 300, "RANK: PRIVATE PULMONARY");
+			if(!isCheater){
+				if(score > 1000000){
+					t_judgement = new FlxText(250, 72, 300, "RANK: ARTERIAS GOD OF BLOOD");
+				}else if(score > 500000){
+					t_judgement = new FlxText(250, 72, 300, "RANK: LORD OF THE LYMPHOS");
+				}else if(score>400000){
+					t_judgement = new FlxText(250, 72, 300, "RANK: MAJOR METABOLIC");
+				}else if(score>300000){
+					t_judgement = new FlxText(250, 72, 300, "RANK: CAPTAIN CRENATION");
+				}else if(score>200000){
+					t_judgement = new FlxText(250, 72, 300, "RANK: LIEUTENANT LIPID");
+				}else if(score>100000){
+					t_judgement = new FlxText(250, 72, 300, "RANK: SERGEANT SEPSIS");
+				}else if(score>50000){
+					t_judgement = new FlxText(250, 72, 300, "RANK: CORPORAL CARDIO");
+				}else if(score>20000){
+					t_judgement = new FlxText(250, 72, 300, "RANK: PRIVATE PULMONARY");
+				}else{
+					t_judgement = new FlxText(250, 72, 300, "RANK: N00B");
+				}
 			}else{
-				t_judgement = new FlxText(250, 72, 300, "RANK: N00B");
+				t_judgement = new FlxText(250, 72, 300, "RANK: CHEATER");
 			}
 			
 			add(t_judgement);

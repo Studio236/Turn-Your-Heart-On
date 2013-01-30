@@ -23,7 +23,7 @@ package ca.studio236.GameJam
 			this.health = 50;
 			blobs = b;
 			target = new FlxPoint(X,Y);
-			this.pointValue = 3000;
+			this.pointValue = 5000;
 			this.loadGraphic(graphic,true);
 			this.addAnimation("main",[0,1],3);
 			this.play("main");

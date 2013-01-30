@@ -31,8 +31,8 @@ package ca.studio236.GameJam
 			this.loadGraphic(graphic1,true);
 			this.addAnimation('idle',[0,1],3);
 			this.play('idle');
-			this.health = 15;
-			this.pointValue = 2500;
+			this.health = 25;
+			this.pointValue = 4000;
 			time = 0;
 			this.immovable = true;
 			

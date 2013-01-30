@@ -55,6 +55,9 @@ package ca.studio236.GameJam
 		
 		public static var finalScore:Number;
 		
+		public var isCheater:Boolean;
+		public static var cheater:Boolean;
+		
 		public var score:Scoreboard = new Scoreboard(5,FlxG.height - 20,100);
 		
 		public var health:FlxText;
@@ -73,6 +76,7 @@ package ca.studio236.GameJam
 			entities.add(powerup);
 			Bypass = -1;
 			BypassTimer = -1;
+			isCheater = false;
 			//loads the crosshair
 			FlxG.playMusic(gameplayMusic);
 			prepTileMap();
@@ -129,6 +133,7 @@ package ca.studio236.GameJam
 			
 			if(endTimer.finished){
 				finalScore = score._score;
+				cheater = isCheater;
 				FlxG.switchState(new GameOverState);
 			}
 			
@@ -140,12 +145,14 @@ package ca.studio236.GameJam
 			if(FlxG.keys.SHIFT && FlxG.keys.PLUS)
 			{
 				score._score += 1000;
+				isCheater = true;
 			}
 			
 			//Dev 1000000 Point Cheat
 			if(FlxG.keys.SHIFT && FlxG.keys.M)
 			{
 				score._score = 1000000;
+				isCheater = true;
 			}
 			
 			//Dev Full Health Cheat
@@ -154,6 +161,7 @@ package ca.studio236.GameJam
 				FlxG.play(seHealth);
 				character.health = 3;
 				setHealth(3);
+				isCheater = true;
 			}
 			
 			if(BypassTimer < 0){

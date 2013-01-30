@@ -5,7 +5,7 @@ package ca.studio236.GameJam
 	public class BossTheClot extends Enemy
 	{
 		
-		[Embed(source='../../../../assets/theclot.png')]
+		[Embed(source='../../../../assets/TheClot.png')]
 		public var graphic:Class;
 		public var shoot = 0;
 		public var shootTimer = 500;
@@ -31,7 +31,7 @@ package ca.studio236.GameJam
 		{
 			FlxG.playMusic(seSong);	
 			FlxG.play(seLaugh);
-			super(character, speed, 0, -100,graphic);
+			super(character, speed, 0, -100, graphic);
 			this.health = 1000;
 			this.pointValue = 50000;
 			this.blobs = bullets;

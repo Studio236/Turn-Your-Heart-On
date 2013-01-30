@@ -55,7 +55,7 @@ package ca.studio236.GameJam
 		private function progress(e:ProgressEvent):void 
 		{
 			if(e.bytesLoaded/e.bytesTotal < 0.10) {
-				myText.text = "Engulfing an Extra Large Pizza..."
+				myText.text = "Engulfing an extra large pizza..."
 			}else
 			if(e.bytesLoaded/e.bytesTotal < 0.20) {
 				myText.text = "Draining a six pack of beer..."
@@ -67,7 +67,7 @@ package ca.studio236.GameJam
 				myText.text = "Filling mouth with whipped cream..."
 			} else
 			if(e.bytesLoaded/e.bytesTotal < 0.50) {
-				myText.text = "Fluffing the marshmellow fluff..."
+				myText.text = "Fluffing the marshmallow fluff..."
 			} else
 			if(e.bytesLoaded/e.bytesTotal < 0.60) {
 				myText.text = "Deep frying a chicken..."
@@ -76,12 +76,12 @@ package ca.studio236.GameJam
 				myText.text = "Upgrading Lay-Z boy..."
 			} else
 			if(e.bytesLoaded/e.bytesTotal < 0.80) {
-				myText.text = "Ordering room Service..."
+				myText.text = "Ordering room service..."
 			} else
 			if(e.bytesLoaded/e.bytesTotal < 0.90) {
 				myText.text = "Loading the game..."
 			} else
-			if(e.bytesLoaded/e.bytesTotal < 0.10) {
+			if(e.bytesLoaded/e.bytesTotal < 1.00) {
 				myText.text = "Turning your heart on..."
 			}
 		}

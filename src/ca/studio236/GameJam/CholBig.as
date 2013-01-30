@@ -13,7 +13,7 @@ package ca.studio236.GameJam
 			speed = 15;
 			super(character, speed, X, Y, graphic);
 			this.health = 40;
-			this.pointValue = 5000;
+			this.pointValue = 3000;
 			this.angle = Math.random() * 360;
 		}
 		

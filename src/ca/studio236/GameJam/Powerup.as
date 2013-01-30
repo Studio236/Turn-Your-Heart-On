@@ -102,8 +102,8 @@ package ca.studio236.GameJam
 					tempScore += e.members[i].pointValue;
 					e.members[i].kill();
 					e.members[i].destroy();
-					e.clear();
 				}
+				e.clear();
 				return tempScore;
 			}
 			return -1;
